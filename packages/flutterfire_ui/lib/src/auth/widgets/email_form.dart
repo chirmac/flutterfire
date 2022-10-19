@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/src/auth/widgets/name_input.dart';
 
 import '../widgets/internal/loading_button.dart';
 import '../validators.dart';
@@ -12,7 +13,8 @@ class ForgotPasswordAction extends FlutterFireUIAction {
   ForgotPasswordAction(this.callback);
 }
 
-typedef EmailSubmitCallback = void Function(String email, String password);
+typedef EmailSubmitCallback = void Function(
+    String email, String password, String displayName);
 
 class EmailFormStyle extends FlutterFireUIStyle {
   final ButtonVariant? signInButtonVariant;
@@ -48,15 +50,23 @@ class EmailForm extends StatelessWidget {
   final EmailProviderConfiguration? config;
   final EmailSubmitCallback? onSubmit;
   final String? email;
+  final bool? showNameOnRegister;
+  final bool? isNameRequiredOnRegister;
 
-  const EmailForm({
+  EmailForm({
     Key? key,
     this.action,
     this.auth,
     this.config,
     this.onSubmit,
     this.email,
-  }) : super(key: key);
+    this.isNameRequiredOnRegister = false,
+    this.showNameOnRegister = true,
+  })  : assert(
+          showNameOnRegister! ||
+              (!showNameOnRegister && isNameRequiredOnRegister!),
+        ),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +76,8 @@ class EmailForm extends StatelessWidget {
       config: config,
       email: email,
       onSubmit: onSubmit,
+      isNameRequiredOnRegister: isNameRequiredOnRegister,
+      showNameOnRegister: showNameOnRegister,
     );
 
     return AuthFlowBuilder<EmailFlowController>(
@@ -83,15 +95,23 @@ class _SignInFormContent extends StatefulWidget {
   final AuthAction? action;
   final String? email;
   final EmailProviderConfiguration? config;
+  final bool? showNameOnRegister;
+  final bool? isNameRequiredOnRegister;
 
-  const _SignInFormContent({
+  _SignInFormContent({
     Key? key,
     this.auth,
     this.onSubmit,
     this.action,
     this.email,
     this.config,
-  }) : super(key: key);
+    this.isNameRequiredOnRegister = false,
+    this.showNameOnRegister = true,
+  })  : assert(
+          showNameOnRegister! ||
+              (!showNameOnRegister && isNameRequiredOnRegister!),
+        ),
+        super(key: key);
 
   @override
   _SignInFormContentState createState() => _SignInFormContentState();
@@ -101,11 +121,13 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
   final confirmPasswordCtrl = TextEditingController();
+  final displayNameCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   final confirmPasswordFocusNode = FocusNode();
+  final displayNameFocusNode = FocusNode();
 
   String _chooseButtonLabel() {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
@@ -121,17 +143,18 @@ class _SignInFormContentState extends State<_SignInFormContent> {
     }
   }
 
-  void _submit([String? password]) {
+  void _submit([String? password, String? displayName]) {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
     final email = (widget.email ?? emailCtrl.text).trim();
 
     if (formKey.currentState!.validate()) {
       if (widget.onSubmit != null) {
-        widget.onSubmit!(email, passwordCtrl.text);
+        widget.onSubmit!(email, passwordCtrl.text, displayNameCtrl.text);
       } else {
         ctrl.setEmailAndPassword(
           email,
           password ?? passwordCtrl.text,
+          displayName: displayName ?? displayNameCtrl.text,
         );
       }
     }
@@ -199,6 +222,14 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           ]),
           label: l.confirmPasswordInputLabel,
         ),
+        const SizedBox(height: 8),
+        if (widget.showNameOnRegister!)
+          NameInput(
+            controller: displayNameCtrl,
+            onSubmitted: _submit,
+            focusNode: displayNameFocusNode,
+            required: widget.showNameOnRegister!,
+          ),
         const SizedBox(height: 8),
       ],
       const SizedBox(height: 8),
