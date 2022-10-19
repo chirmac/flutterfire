@@ -18,8 +18,8 @@ class EmailFormWidgetStory extends StoryWidget {
     return Center(
       child: EmailForm(
         action: action,
-        onSubmit: (email, password) {
-          context.notify('Submitted $email $password');
+        onSubmit: (email, password, displayName) {
+          context.notify('Submitted $email $password $displayName');
         },
       ),
     );
