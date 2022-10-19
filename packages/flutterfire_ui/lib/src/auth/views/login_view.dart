@@ -24,10 +24,12 @@ class LoginView extends StatefulWidget {
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? footerBuilder;
   final AuthViewContentBuilder? subtitleBuilder;
+  final bool? showNameOnRegister;
+  final bool? isNameRequiredOnRegister;
 
   final List<ProviderConfiguration> providerConfigs;
 
-  const LoginView({
+  LoginView({
     Key? key,
     required this.action,
     required this.providerConfigs,
@@ -38,7 +40,13 @@ class LoginView extends StatefulWidget {
     this.showAuthActionSwitch,
     this.footerBuilder,
     this.subtitleBuilder,
-  }) : super(key: key);
+    this.showNameOnRegister = true,
+    this.isNameRequiredOnRegister = false,
+  })  : assert(
+          showNameOnRegister! ||
+              (!showNameOnRegister && isNameRequiredOnRegister!),
+        ),
+        super(key: key);
 
   @override
   State<LoginView> createState() => LoginViewState();
@@ -198,6 +206,8 @@ class LoginViewState extends State<LoginView> {
                   action: _action,
                   config: config,
                   email: widget.email,
+                  isNameRequiredOnRegister: widget.isNameRequiredOnRegister,
+                  showNameOnRegister: widget.showNameOnRegister,
                 )
               ] else if (config is PhoneProviderConfiguration) ...[
                 const SizedBox(height: 8),

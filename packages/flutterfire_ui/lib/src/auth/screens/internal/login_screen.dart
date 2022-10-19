@@ -23,8 +23,10 @@ class LoginScreen extends StatelessWidget {
   final Key? loginViewKey;
   final double breakpoint;
   final Set<FlutterFireUIStyle>? styles;
+  final bool? showNameOnRegister;
+  final bool? isNameRequiredOnRegister;
 
-  const LoginScreen({
+  LoginScreen({
     Key? key,
     required this.action,
     required this.providerConfigs,
@@ -42,7 +44,13 @@ class LoginScreen extends StatelessWidget {
     this.loginViewKey,
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key);
+    this.showNameOnRegister = true,
+    this.isNameRequiredOnRegister = false,
+  })  : assert(
+          showNameOnRegister! ||
+              (!showNameOnRegister && isNameRequiredOnRegister!),
+        ),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +68,8 @@ class LoginScreen extends StatelessWidget {
           showAuthActionSwitch: showAuthActionSwitch,
           subtitleBuilder: subtitleBuilder,
           footerBuilder: footerBuilder,
+          isNameRequiredOnRegister: isNameRequiredOnRegister,
+          showNameOnRegister: showNameOnRegister,
         ),
       ),
     );

@@ -24,8 +24,10 @@ class RegisterScreen extends MultiProviderScreen {
   final AuthViewContentBuilder? footerBuilder;
   final double breakpoint;
   final Set<FlutterFireUIStyle>? styles;
+  final bool? showNameOnRegister;
+  final bool? isNameRequiredOnRegister;
 
-  const RegisterScreen({
+  RegisterScreen({
     Key? key,
     FirebaseAuth? auth,
     List<ProviderConfiguration>? providerConfigs,
@@ -41,7 +43,13 @@ class RegisterScreen extends MultiProviderScreen {
     this.footerBuilder,
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key, auth: auth, providerConfigs: providerConfigs);
+    this.showNameOnRegister = true,
+    this.isNameRequiredOnRegister = false,
+  })  : assert(
+          showNameOnRegister! ||
+              (!showNameOnRegister && isNameRequiredOnRegister!),
+        ),
+        super(key: key, auth: auth, providerConfigs: providerConfigs);
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +68,8 @@ class RegisterScreen extends MultiProviderScreen {
       showAuthActionSwitch: showAuthActionSwitch,
       subtitleBuilder: subtitleBuilder,
       footerBuilder: footerBuilder,
+      showNameOnRegister: showNameOnRegister,
+      isNameRequiredOnRegister: isNameRequiredOnRegister,
     );
   }
 }
