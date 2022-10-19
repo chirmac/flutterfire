@@ -53,6 +53,18 @@ class EmailValidator extends Validator {
   }
 }
 
+class NameValidator extends Validator {
+  final bool required;
+  NameValidator(String errorText, this.required) : super(errorText, []);
+
+  @override
+  String? validate(String? value) {
+    if (value == null) return errorText;
+    if (required && value.trim().isEmpty) return errorText;
+    return !value.contains(RegExp(r'\d')) ? null : errorText;
+  }
+}
+
 class ConfirmPasswordValidator extends Validator {
   final TextEditingController controller;
 
