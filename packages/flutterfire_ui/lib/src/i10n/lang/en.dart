@@ -167,6 +167,10 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
   final String geopointLabel;
   @override
   final String referenceLabel;
+  @override
+  final String isNotAValidNameErrorText;
+  @override
+  final String nameInputLabel;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -259,5 +263,7 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
     this.latitudeLabel = 'latitude',
     this.geopointLabel = 'geopoint',
     this.referenceLabel = 'reference',
+    this.nameInputLabel = 'Name',
+    this.isNotAValidNameErrorText = 'Name is not valid',
   });
 }

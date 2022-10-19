@@ -21,6 +21,7 @@ abstract class FlutterFireUILocalizationLabels {
 
   String get emailInputLabel;
   String get passwordInputLabel;
+  String get nameInputLabel;
   String get signInActionText;
   String get registerActionText;
 
@@ -45,6 +46,7 @@ abstract class FlutterFireUILocalizationLabels {
   String get enterSMSCodeText;
   String get emailIsRequiredErrorText;
   String get isNotAValidEmailErrorText;
+  String get isNotAValidNameErrorText;
   String get userNotFoundErrorText;
   String get emailTakenErrorText;
   String get accessDisabledErrorText;
