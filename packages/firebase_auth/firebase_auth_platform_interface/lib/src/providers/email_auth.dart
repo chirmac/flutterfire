@@ -33,12 +33,14 @@ abstract class EmailAuthProvider extends AuthProvider {
     return _kProviderId;
   }
 
-  /// Creates a new [EmailAuthCredential] from a given email and password.
+  /// Creates a new [EmailAuthCredential] from a given email, password and an optional name.
   static AuthCredential credential({
     required String email,
     required String password,
+    String? displayName,
   }) {
-    return EmailAuthCredential._credential(email, password);
+    return EmailAuthCredential._credential(email, password,
+        displayName: displayName);
   }
 
   /// Creates a new [EmailAuthCredential] from a given email and email link.
@@ -58,17 +60,25 @@ class EmailAuthCredential extends AuthCredential {
     required this.email,
     this.password,
     this.emailLink,
+    this.displayName,
   }) : super(providerId: _kProviderId, signInMethod: _signInMethod);
 
-  factory EmailAuthCredential._credential(String email, String password) {
+  factory EmailAuthCredential._credential(
+    String email,
+    String password, {
+    String? displayName,
+  }) {
     return EmailAuthCredential._(_kProviderId,
-        email: email, password: password);
+        email: email, password: password, displayName: displayName);
   }
 
   factory EmailAuthCredential._credentialWithLink(
-      String email, String emailLink) {
+    String email,
+    String emailLink, {
+    String? displayName,
+  }) {
     return EmailAuthCredential._(_kLinkProviderId,
-        email: email, emailLink: emailLink);
+        email: email, emailLink: emailLink, displayName: displayName);
   }
 
   /// The user's email address.
@@ -76,6 +86,9 @@ class EmailAuthCredential extends AuthCredential {
 
   /// The user account password.
   final String? password;
+
+  /// The user account name.
+  final String? displayName;
 
   /// The sign-in email link.
   final String? emailLink;
@@ -88,6 +101,7 @@ class EmailAuthCredential extends AuthCredential {
       'email': email,
       'emailLink': emailLink,
       'secret': password,
+      'name': displayName,
     };
   }
 }
