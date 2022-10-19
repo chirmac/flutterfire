@@ -17,7 +17,11 @@ class UserCreated extends AuthState {
 class SigningUp extends AuthState {}
 
 abstract class EmailFlowController extends AuthController {
-  void setEmailAndPassword(String email, String password);
+  void setEmailAndPassword(
+    String email,
+    String password, {
+    String? displayName,
+  });
 }
 
 class EmailFlow extends AuthFlow implements EmailFlowController {
@@ -37,10 +41,15 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
   final EmailProviderConfiguration config;
 
   @override
-  void setEmailAndPassword(String email, String password) {
+  void setEmailAndPassword(
+    String email,
+    String password, {
+    String? displayName,
+  }) {
     final credential = EmailAuthProvider.credential(
       email: email,
       password: password,
+      displayName: displayName,
     );
 
     setCredential(credential);
@@ -56,6 +65,10 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
           email: (credential as EmailAuthCredential).email,
           password: credential.password!,
         );
+
+        if (credential.displayName != null) {
+          await userCredential.user!.updateDisplayName(credential.displayName);
+        }
 
         value = UserCreated(userCredential);
 
